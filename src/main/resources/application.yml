@@ -3,3 +3,10 @@ server:
   address: localhost
   servlet:
     contexgitt-path: /
+spring:
+  datasource:
+      url: jdbc:mysql://106.14.222.148:3306/test_Jm
+      username: root
+      password: mymysql
+      driverClassName: com.mysql.jdbc.Driver
+
