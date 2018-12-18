@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 /**
- * @author Administrator
+ * @author 危常焕
  */
 public class HttpResult<T> implements java.io.Serializable {
 
