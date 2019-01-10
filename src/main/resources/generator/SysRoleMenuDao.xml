@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.SysRoleMenuDao">
+  <resultMap id="BaseResultMap" type="generator.SysRoleMenu">
+    <result column="role_menu_id" jdbcType="VARCHAR" property="roleMenuId" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+  </resultMap>
+  <insert id="insert" parameterType="generator.SysRoleMenu">
+    insert into sys_role_menu (role_menu_id, role_id, menu_id
+      )
+    values (#{roleMenuId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, #{menuId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="generator.SysRoleMenu">
+    insert into sys_role_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleMenuId != null">
+        role_menu_id,
+      </if>
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="menuId != null">
+        menu_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleMenuId != null">
+        #{roleMenuId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null">
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuId != null">
+        #{menuId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

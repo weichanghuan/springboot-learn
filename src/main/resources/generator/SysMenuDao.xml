@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.SysMenuDao">
+  <resultMap id="BaseResultMap" type="generator.SysMenu">
+    <result column="menu_id" jdbcType="VARCHAR" property="menuId" />
+    <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="is_hide" jdbcType="VARCHAR" property="isHide" />
+    <result column="level" jdbcType="INTEGER" property="level" />
+    <result column="disp_order" jdbcType="INTEGER" property="dispOrder" />
+  </resultMap>
+  <insert id="insert" parameterType="generator.SysMenu">
+    insert into sys_menu (menu_id, menu_name, url, 
+      parent_id, is_hide, `level`, 
+      disp_order)
+    values (#{menuId,jdbcType=VARCHAR}, #{menuName,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=VARCHAR}, #{isHide,jdbcType=VARCHAR}, #{level,jdbcType=INTEGER}, 
+      #{dispOrder,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="generator.SysMenu">
+    insert into sys_menu
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        menu_id,
+      </if>
+      <if test="menuName != null">
+        menu_name,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="isHide != null">
+        is_hide,
+      </if>
+      <if test="level != null">
+        `level`,
+      </if>
+      <if test="dispOrder != null">
+        disp_order,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="menuId != null">
+        #{menuId,jdbcType=VARCHAR},
+      </if>
+      <if test="menuName != null">
+        #{menuName,jdbcType=VARCHAR},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="isHide != null">
+        #{isHide,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null">
+        #{level,jdbcType=INTEGER},
+      </if>
+      <if test="dispOrder != null">
+        #{dispOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.SysUserDao">
+  <resultMap id="BaseResultMap" type="generator.SysUser">
+    <id column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_uid" jdbcType="VARCHAR" property="userUid" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="full_name" jdbcType="VARCHAR" property="fullName" />
+    <result column="wx_open_id" jdbcType="VARCHAR" property="wxOpenId" />
+    <result column="wx_user_id" jdbcType="VARCHAR" property="wxUserId" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="auto_login" jdbcType="VARCHAR" property="autoLogin" />
+    <result column="company_code" jdbcType="VARCHAR" property="companyCode" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="is_active" jdbcType="VARCHAR" property="isActive" />
+    <result column="last_get_time" jdbcType="TIMESTAMP" property="lastGetTime" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="user_icon" jdbcType="VARCHAR" property="userIcon" />
+    <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="dealer_id" jdbcType="VARCHAR" property="dealerId" />
+    <result column="join_job_time" jdbcType="DATE" property="joinJobTime" />
+    <result column="entry_time" jdbcType="DATE" property="entryTime" />
+    <result column="mailbox" jdbcType="VARCHAR" property="mailbox" />
+    <result column="dept_one" jdbcType="VARCHAR" property="deptOne" />
+    <result column="dept_two" jdbcType="VARCHAR" property="deptTwo" />
+    <result column="dept_three" jdbcType="VARCHAR" property="deptThree" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_name, user_uid, `password`, full_name, wx_open_id, wx_user_id, telephone, auto_login, 
+    company_code, company_name, is_active, last_get_time, last_login_time, user_icon, 
+    card_id, sex, dealer_id, join_job_time, entry_time, mailbox, dept_one, dept_two, 
+    dept_three
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_user
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="user_name" keyProperty="userName" parameterType="generator.SysUser" useGeneratedKeys="true">
+    insert into sys_user (user_uid, `password`, full_name, 
+      wx_open_id, wx_user_id, telephone, 
+      auto_login, company_code, company_name, 
+      is_active, last_get_time, last_login_time, 
+      user_icon, card_id, sex, 
+      dealer_id, join_job_time, entry_time, 
+      mailbox, dept_one, dept_two, 
+      dept_three)
+    values (#{userUid,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{fullName,jdbcType=VARCHAR}, 
+      #{wxOpenId,jdbcType=VARCHAR}, #{wxUserId,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, 
+      #{autoLogin,jdbcType=VARCHAR}, #{companyCode,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
+      #{isActive,jdbcType=VARCHAR}, #{lastGetTime,jdbcType=TIMESTAMP}, #{lastLoginTime,jdbcType=TIMESTAMP}, 
+      #{userIcon,jdbcType=VARCHAR}, #{cardId,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{dealerId,jdbcType=VARCHAR}, #{joinJobTime,jdbcType=DATE}, #{entryTime,jdbcType=DATE}, 
+      #{mailbox,jdbcType=VARCHAR}, #{deptOne,jdbcType=VARCHAR}, #{deptTwo,jdbcType=VARCHAR}, 
+      #{deptThree,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="user_name" keyProperty="userName" parameterType="generator.SysUser" useGeneratedKeys="true">
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userUid != null">
+        user_uid,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="fullName != null">
+        full_name,
+      </if>
+      <if test="wxOpenId != null">
+        wx_open_id,
+      </if>
+      <if test="wxUserId != null">
+        wx_user_id,
+      </if>
+      <if test="telephone != null">
+        telephone,
+      </if>
+      <if test="autoLogin != null">
+        auto_login,
+      </if>
+      <if test="companyCode != null">
+        company_code,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
+      <if test="isActive != null">
+        is_active,
+      </if>
+      <if test="lastGetTime != null">
+        last_get_time,
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time,
+      </if>
+      <if test="userIcon != null">
+        user_icon,
+      </if>
+      <if test="cardId != null">
+        card_id,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="dealerId != null">
+        dealer_id,
+      </if>
+      <if test="joinJobTime != null">
+        join_job_time,
+      </if>
+      <if test="entryTime != null">
+        entry_time,
+      </if>
+      <if test="mailbox != null">
+        mailbox,
+      </if>
+      <if test="deptOne != null">
+        dept_one,
+      </if>
+      <if test="deptTwo != null">
+        dept_two,
+      </if>
+      <if test="deptThree != null">
+        dept_three,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userUid != null">
+        #{userUid,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="fullName != null">
+        #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenId != null">
+        #{wxOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxUserId != null">
+        #{wxUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="autoLogin != null">
+        #{autoLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCode != null">
+        #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null">
+        #{isActive,jdbcType=VARCHAR},
+      </if>
+      <if test="lastGetTime != null">
+        #{lastGetTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null">
+        #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userIcon != null">
+        #{userIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="cardId != null">
+        #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="dealerId != null">
+        #{dealerId,jdbcType=VARCHAR},
+      </if>
+      <if test="joinJobTime != null">
+        #{joinJobTime,jdbcType=DATE},
+      </if>
+      <if test="entryTime != null">
+        #{entryTime,jdbcType=DATE},
+      </if>
+      <if test="mailbox != null">
+        #{mailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="deptOne != null">
+        #{deptOne,jdbcType=VARCHAR},
+      </if>
+      <if test="deptTwo != null">
+        #{deptTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="deptThree != null">
+        #{deptThree,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="generator.SysUser">
+    update sys_user
+    <set>
+      <if test="userUid != null">
+        user_uid = #{userUid,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="fullName != null">
+        full_name = #{fullName,jdbcType=VARCHAR},
+      </if>
+      <if test="wxOpenId != null">
+        wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxUserId != null">
+        wx_user_id = #{wxUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="autoLogin != null">
+        auto_login = #{autoLogin,jdbcType=VARCHAR},
+      </if>
+      <if test="companyCode != null">
+        company_code = #{companyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
+      <if test="isActive != null">
+        is_active = #{isActive,jdbcType=VARCHAR},
+      </if>
+      <if test="lastGetTime != null">
+        last_get_time = #{lastGetTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="userIcon != null">
+        user_icon = #{userIcon,jdbcType=VARCHAR},
+      </if>
+      <if test="cardId != null">
+        card_id = #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="dealerId != null">
+        dealer_id = #{dealerId,jdbcType=VARCHAR},
+      </if>
+      <if test="joinJobTime != null">
+        join_job_time = #{joinJobTime,jdbcType=DATE},
+      </if>
+      <if test="entryTime != null">
+        entry_time = #{entryTime,jdbcType=DATE},
+      </if>
+      <if test="mailbox != null">
+        mailbox = #{mailbox,jdbcType=VARCHAR},
+      </if>
+      <if test="deptOne != null">
+        dept_one = #{deptOne,jdbcType=VARCHAR},
+      </if>
+      <if test="deptTwo != null">
+        dept_two = #{deptTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="deptThree != null">
+        dept_three = #{deptThree,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="generator.SysUser">
+    update sys_user
+    set user_uid = #{userUid,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      full_name = #{fullName,jdbcType=VARCHAR},
+      wx_open_id = #{wxOpenId,jdbcType=VARCHAR},
+      wx_user_id = #{wxUserId,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      auto_login = #{autoLogin,jdbcType=VARCHAR},
+      company_code = #{companyCode,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR},
+      is_active = #{isActive,jdbcType=VARCHAR},
+      last_get_time = #{lastGetTime,jdbcType=TIMESTAMP},
+      last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      user_icon = #{userIcon,jdbcType=VARCHAR},
+      card_id = #{cardId,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      dealer_id = #{dealerId,jdbcType=VARCHAR},
+      join_job_time = #{joinJobTime,jdbcType=DATE},
+      entry_time = #{entryTime,jdbcType=DATE},
+      mailbox = #{mailbox,jdbcType=VARCHAR},
+      dept_one = #{deptOne,jdbcType=VARCHAR},
+      dept_two = #{deptTwo,jdbcType=VARCHAR},
+      dept_three = #{deptThree,jdbcType=VARCHAR}
+    where user_name = #{userName,jdbcType=VARCHAR}
+  </update>
+</mapper>

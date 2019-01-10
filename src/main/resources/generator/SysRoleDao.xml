@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.SysRoleDao">
+  <resultMap id="BaseResultMap" type="generator.SysRole">
+    <id column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="role_type" jdbcType="VARCHAR" property="roleType" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    role_id, role_type, role_name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_role
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_role
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" keyColumn="role_id" keyProperty="roleId" parameterType="generator.SysRole" useGeneratedKeys="true">
+    insert into sys_role (role_type, role_name)
+    values (#{roleType,jdbcType=VARCHAR}, #{roleName,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="role_id" keyProperty="roleId" parameterType="generator.SysRole" useGeneratedKeys="true">
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleType != null">
+        role_type,
+      </if>
+      <if test="roleName != null">
+        role_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleType != null">
+        #{roleType,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        #{roleName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="generator.SysRole">
+    update sys_role
+    <set>
+      <if test="roleType != null">
+        role_type = #{roleType,jdbcType=VARCHAR},
+      </if>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="generator.SysRole">
+    update sys_role
+    set role_type = #{roleType,jdbcType=VARCHAR},
+      role_name = #{roleName,jdbcType=VARCHAR}
+    where role_id = #{roleId,jdbcType=VARCHAR}
+  </update>
+</mapper>
