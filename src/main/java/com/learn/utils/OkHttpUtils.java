@@ -3,6 +3,7 @@ package com.learn.utils;
 
 import com.alibaba.fastjson.JSON;
 import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ public class OkHttpUtils {
     public final static int READ_TIMEOUT = 100;
     public final static int CONNECT_TIMEOUT = 60;
     public final static int WRITE_TIMEOUT = 60;
-    public static final MediaType JSON_MEDIATYPE = MediaType.parse(JSONTYPE);
+    public final static MediaType JSON_MEDIATYPE = MediaType.parse(JSONTYPE);
     private static final byte[] LOCKER = new byte[0];
 
     private volatile static OkHttpUtils mInstance;
@@ -39,7 +40,7 @@ public class OkHttpUtils {
     private OkHttpClient mOkHttpClient;
 
     private OkHttpUtils() {
-        okhttp3.OkHttpClient.Builder ClientBuilder = new okhttp3.OkHttpClient.Builder();
+        OkHttpClient.Builder ClientBuilder = new OkHttpClient.Builder();
         ClientBuilder.readTimeout(READ_TIMEOUT, TimeUnit.SECONDS);//读取超时
         ClientBuilder.connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS);//连接超时
         ClientBuilder.writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS);//写入超时
@@ -71,75 +72,71 @@ public class OkHttpUtils {
     }
 
     /**
-     * get请求，同步方式，获取网络数据，是在主线程中执行的，需要新起线程，将其放到子线程中执行
+     * doGet请求，同步方式，获取网络数据，是在主线程中执行的，需要新起线程，将其放到子线程中执行
      *
      * @param url
      * @return
      */
-    public Response synGetData(String url) throws Exception {
-        return synGetData(url, null);
+    public <T> T doGet(String url, Class<T> clazz) throws Exception {
+        return doGet(url, null, clazz);
     }
 
 
     /**
-     * get请求，同步方式，获取网络数据，是在主线程中执行的，需要新起线程，将其放到子线程中执行
-     * @param url 请求路径
+     * doGet请求，同步方式，获取网络数据，是在主线程中执行的，需要新起线程，将其放到子线程中执行
+     *
+     * @param url     请求路径
      * @param headers 请求头
-     * @return
-     * * @throws Exception
+     * @return * @throws Exception
      */
-    public Response synGetData(String url, Map<String, String> headers) throws Exception {
+    public <T> T doGet(String url, Map<String, String> headers, Class<T> clazz) throws Exception {
         Response response = null;
         //1 构造Request
         Request.Builder builder = new Request.Builder();
-
         Request request = builder.get().url(url).headers(addHeaders(headers)).build();
         //2 将Request封装为Call
         Call call = mOkHttpClient.newCall(request);
         //3 执行Call，得到response
         response = call.execute();
-        return response;
+        return getResponse(response, clazz);
     }
 
     /**
-     * post请求，同步方式，
-     * @param url 请求路径
-     * @param object 请求对象
-     * @return
-     * * @throws Exception
-     */
-    public Response synPostData(String url, Object object) throws Exception {
-        Response response = null;
-        Map<String, String> req = (Map<String, String>) JSON.toJSON(object);
-        response = synPostData(url, req, null);
-        return response;
-    }
-
-    /**
-     * post请求，同步方式，
-     * @param url 请求路径
-     * @param object 请求对象
-     * @param headers 请求头
-     * @return
-     * @throws Exception
-     */
-    public Response synPostData(String url, Object object, Map<String, String> headers) throws Exception {
-        Response response = null;
-        Map<String, String> req = (Map<String, String>) JSON.toJSON(object);
-        response = synPostData(url, req, headers);
-        return response;
-    }
-
-    /**
-     * post请求，同步方式，
+     * doPost请求，同步方式，
      *
-     * @param url 请求路径
-     * @param bodyParams 请求KV
+     * @param url    请求路径
+     * @param object 请求对象
+     * @return * @throws Exception
+     */
+    public <T> T doPost(String url, Object object, Class<T> clazz) throws Exception {
+        Response response = null;
+        return doPostJson(url, JSON.toJSONString(object), clazz);
+    }
+
+    /**
+     * doPost请求，同步方式，
+     *
+     * @param url     请求路径
+     * @param object  请求对象
      * @param headers 请求头
      * @return
      * @throws Exception
      */
-    public Response synPostData(String url, Map<String, String> bodyParams, Map<String, String> headers) throws Exception {
+    public <T> T doPost(String url, Object object, Class<T> clazz, Map<String, String> headers) throws Exception {
+        Response response = null;
+        return doPostJson(url, JSON.toJSONString(object), headers,clazz);
+    }
+
+    /**
+     * doPost请求，同步方式，
+     *
+     * @param url        请求路径
+     * @param bodyParams 请求KV
+     * @param headers    请求头
+     * @return
+     * @throws Exception
+     */
+    public <T> T doPost(String url, Map<String, String> bodyParams, Map<String, String> headers, Class<T> clazz) throws Exception {
         //1构造RequestBody
         RequestBody body = setRequestBody(bodyParams);
         //2 构造Request
@@ -150,31 +147,31 @@ public class OkHttpUtils {
         //4 执行Call，得到response
         Response response = null;
         response = call.execute();
-        return response;
+       return getResponse(response,clazz);
     }
 
     /**
-     * get请求，异步方式，获取网络数据，是在子线程中执行的，需要切换到主线程才能更新UI
+     * doGet请求，异步方式，获取网络数据，是在子线程中执行的，需要切换到主线程才能更新UI
      *
-     * @param url 请求路径
+     * @param url       请求路径
      * @param myNetCall 回调函数
      * @return
      * @throws Exception
      */
-    public void asynGetData(String url, final MyNetCall myNetCall) throws Exception {
-        asynGetData(url, null, myNetCall);
+    public void doGetAsyn(String url, final MyNetCall myNetCall) throws Exception {
+        doGetAsyn(url, null, myNetCall);
     }
 
     /**
-     * get请求，异步方式，获取网络数据，是在子线程中执行的，需要切换到主线程才能更新UI
+     * doGet请求，异步方式，获取网络数据，是在子线程中执行的，需要切换到主线程才能更新UI
      *
-     * @param url 请求路径
-     * @param headers 请求头
+     * @param url       请求路径
+     * @param headers   请求头
      * @param myNetCall 回调函数
      * @return
      * @throws Exception
      */
-    public void asynGetData(String url, Map<String, String> headers, final MyNetCall myNetCall) throws Exception {
+    public void doGetAsyn(String url, Map<String, String> headers, final MyNetCall myNetCall) throws Exception {
         //1 构造Request
         Request.Builder builder = new Request.Builder();
         Request request = builder.get().url(url).headers(addHeaders(headers)).build();
@@ -196,42 +193,40 @@ public class OkHttpUtils {
     }
 
     /**
-     * post请求，异步方式，
+     * doPost请求，异步方式，
      *
-     * @param url 请求路径
-     * @param object 请求实体
+     * @param url       请求路径
+     * @param object    请求实体
      * @param myNetCall 回调函数
      * @throws Exception
      */
-    public void asynPostData(String url, Object object, final MyNetCall myNetCall) throws Exception {
-        Map<String, String> req = (Map<String, String>) JSON.toJSON(object);
-        asynPostData(url, req, null, myNetCall);
+    public void doPostAsyn(String url, Object object, final MyNetCall myNetCall) throws Exception {
+        doPostJsonAysn(url, JSON.toJSONString(object), myNetCall);
     }
 
     /**
-     * post请求，异步方式，
+     * doPost请求，异步方式，
      *
-     * @param url 请求路径
-     * @param object 请求实体
-     * @param headers 请求头
+     * @param url       请求路径
+     * @param object    请求实体
+     * @param headers   请求头
      * @param myNetCall 回调函数
      * @throws Exception
      */
-    public void asynPostData(String url, Object object, Map<String, String> headers, final MyNetCall myNetCall) throws Exception {
-        Map<String, String> req = (Map<String, String>) JSON.toJSON(object);
-        asynPostData(url, req, headers, myNetCall);
+    public void doPostAsyn(String url, Object object, Map<String, String> headers, final MyNetCall myNetCall) throws Exception {
+        doPostJsonAysn(url, JSON.toJSONString(object), myNetCall, headers);
     }
 
     /**
-     * post请求，异步方式，
+     * doPost请求，异步方式，
      *
-     * @param url 请求路径
+     * @param url        请求路径
      * @param bodyParams 请求KV
-     * @param headers 请求头
-     * @param myNetCall 回调函数
+     * @param headers    请求头
+     * @param myNetCall  回调函数
      * @throws Exception
      */
-    public void asynPostData(String url, Map<String, String> bodyParams, Map<String, String> headers, final MyNetCall myNetCall) throws Exception {
+    public void doPostAsyn(String url, Map<String, String> bodyParams, Map<String, String> headers, final MyNetCall myNetCall) throws Exception {
         //1构造RequestBody
         RequestBody body = setRequestBody(bodyParams);
         //2 构造Request
@@ -255,14 +250,15 @@ public class OkHttpUtils {
     }
 
     /**
-     * post请求，同步方式，
-     * @param url 请求路径
-     * @param json 请求json
+     * doPost请求，同步方式，
+     *
+     * @param url     请求路径
+     * @param json    请求json
      * @param headers 请求头
      * @return
      * @throws IOException
      */
-    public String synPostJson(String url, String json, Map<String, String> headers) throws IOException {
+    public <T> T doPostJson(String url, String json, Map<String, String> headers, Class<T> clazz) throws Exception {
         RequestBody body = RequestBody.create(JSON_MEDIATYPE, json);
         Request request = new Request.Builder()
                 .url(url)
@@ -270,33 +266,31 @@ public class OkHttpUtils {
                 .post(body)
                 .build();
         Response response = mOkHttpClient.newCall(request).execute();
-        if (response.isSuccessful()) {
-            return response.body().string();
-        } else {
-            throw new IOException("Unexpected code " + response);
-        }
+        return getResponse(response, clazz);
     }
 
     /**
-     * post请求，同步方式
-     * @param url 请求路径
+     * doPost请求，同步方式
+     *
+     * @param url  请求路径
      * @param json 请求json
      * @return
      * @throws IOException
      */
-    public String synPostJson(String url, String json) throws IOException {
-        return synPostJson(url, json, null);
+    public <T> T doPostJson(String url, String json, Class<T> clazz) throws Exception {
+        return doPostJson(url, json, null, clazz);
     }
 
     /**
-     * post请求，异步方式
+     * doPost请求，异步方式
+     *
      * @param url
      * @param json
      * @param myNetCall
      * @param headers
      * @throws IOException
      */
-    public void asynPostJson(String url, String json, final MyNetCall myNetCall, Map<String, String> headers) throws IOException {
+    public void doPostJsonAysn(String url, String json, final MyNetCall myNetCall, Map<String, String> headers) throws IOException {
         RequestBody body = RequestBody.create(JSON_MEDIATYPE, json);
         //2 构造Request
         Request.Builder requestBuilder = new Request.Builder();
@@ -319,32 +313,33 @@ public class OkHttpUtils {
     }
 
     /**
-     * post请求，异步方式
+     * doPost请求，异步方式
+     *
      * @param url
      * @param json
      * @param myNetCall
      * @throws IOException
      */
-    public void asynPostJson(String url, String json, final MyNetCall myNetCall) throws IOException {
-        asynPostJson(url, json, myNetCall, null);
+    public void doPostJsonAysn(String url, String json, final MyNetCall myNetCall) throws IOException {
+        doPostJsonAysn(url, json, myNetCall, null);
     }
 
     /**
-     * post的请求参数，构造RequestBody
+     * doPost的请求参数，构造RequestBody
      *
      * @param BodyParams
      * @return
      */
     private RequestBody setRequestBody(Map<String, String> BodyParams) {
         RequestBody body = null;
-        okhttp3.FormBody.Builder formEncodingBuilder = new okhttp3.FormBody.Builder();
+        FormBody.Builder formEncodingBuilder = new FormBody.Builder();
         if (BodyParams != null) {
             Iterator<String> iterator = BodyParams.keySet().iterator();
             String key = "";
             while (iterator.hasNext()) {
                 key = iterator.next().toString();
                 formEncodingBuilder.add(key, BodyParams.get(key));
-                logger.info("post http", "post_Params===" + key + "====" + BodyParams.get(key));
+                logger.info("doPost http", "doPost_Params===" + key + "====" + BodyParams.get(key));
             }
         }
         body = formEncodingBuilder.build();
@@ -381,6 +376,18 @@ public class OkHttpUtils {
         }
         return Headers.of(header);
 
+    }
+
+    private <T> T getResponse(Response response, Class<T> clazz) throws Exception {
+        if (response.isSuccessful()) {
+            String result = response.body().string();
+            if (StringUtils.isBlank(result)) {
+                logger.info("doPost response is null ");
+                return null;
+            }
+            T t = JSON.parseObject(result, clazz);
+        }
+        throw new IOException("Unexpected code " + response);
     }
 
     /**
